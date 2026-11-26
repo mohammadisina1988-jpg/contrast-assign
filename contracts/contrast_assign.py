@@ -70,7 +70,7 @@ def _unique_keys(pairs: list) -> dict:
 def _fetch_palette(url: str) -> list[str]:
     response = gl.nondet.web.get(url)
     if response.status != 200 or len(response.body) > 16_384:
-        raise gl.UserError("Open Color palette acquisition failed")
+        raise gl.vm.UserError("Open Color palette acquisition failed")
     try:
         source = json.loads(response.body.decode("utf-8"), object_pairs_hook=_unique_keys)
         if not isinstance(source, dict):
@@ -89,7 +89,7 @@ def _fetch_palette(url: str) -> list[str]:
             palette.append(color)
         return palette
     except (ValueError, IndexError, KeyError, RecursionError):
-        raise gl.UserError("Invalid Open Color palette")
+        raise gl.vm.UserError("Invalid Open Color palette")
 
 
 def _solve(palette: list[str], baseline: tuple[int, ...]) -> dict:
@@ -116,9 +116,9 @@ def _solve(palette: list[str], baseline: tuple[int, ...]) -> dict:
 
 def _study_key(revision: str, baseline: str) -> str:
     if len(revision) != 40 or any(digit not in HEX for digit in revision):
-        raise gl.UserError("Expected a lowercase upstream commit SHA")
+        raise gl.vm.UserError("Expected a lowercase upstream commit SHA")
     if len(baseline) != len(SLOTS) or sorted(baseline) != list("012345"):
-        raise gl.UserError("Baseline must be a permutation of 012345")
+        raise gl.vm.UserError("Baseline must be a permutation of 012345")
     return revision + ":" + baseline
 
 
@@ -148,7 +148,12 @@ class ContrastAssign(gl.Contract):
             return json.dumps(study, sort_keys=True, separators=(",", ":"))
 
         def validate(leader):
-            return isinstance(leader, gl.vm.Return) and observe() == leader.calldata
+            if not isinstance(leader, gl.vm.Return):
+                return False
+            try:
+                return observe() == leader.calldata
+            except gl.vm.UserError:
+                return False
 
         self.studies[key] = gl.vm.run_nondet_unsafe(observe, validate)
         return key

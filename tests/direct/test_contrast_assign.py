@@ -77,6 +77,10 @@ def test_validator_requires_exact_evidence_and_decision(direct_vm, contract):
     assert direct_vm.run_validator() is False
 
     direct_vm.clear_mocks()
+    provide(direct_vm, status=503)
+    assert direct_vm.run_validator() is False
+
+    direct_vm.clear_mocks()
     unavailable = BODY
     for color in PALETTE:
         unavailable = unavailable.replace(color.encode(), b"#ffffff")
