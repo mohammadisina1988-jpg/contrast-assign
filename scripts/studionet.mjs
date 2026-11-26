@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { setTimeout as sleep } from "node:timers/promises";
-import { createAccount, createClient } from "genlayer-js";
+import { abi, createAccount, createClient } from "genlayer-js";
 import { studionet } from "genlayer-js/chains";
 import { keccak256 } from "viem";
 import { chooseAssignment, readPalette, verifyStudy } from "./reference.mjs";
@@ -108,6 +108,33 @@ if (!prior) {
 }
 if (verify) assert.deepEqual(ledger.transactions.map(entry => entry.label), txPlan.map(step => step.label));
 
+async function verifyStep(step, entry) {
+  const receipt = await finalized(entry.hash);
+  if (!step.method) {
+    const deployed = receipt.to_address ?? receipt.recipient;
+    if (ledger.contract) assert.equal(ledger.contract, deployed);
+    ledger.contract = deployed;
+    assert.deepEqual(Buffer.from(receipt.data.contract_code, "base64"), contractCode);
+    assert.equal(await read(() => client.getContractCode(deployed)), contractCode.toString("utf8"));
+  }
+  const checked = checkReceipt(receipt, entry, ledger.contract);
+  if (step.method) {
+    checked.baseline = step.baseline;
+    checked.return_data = receipt.consensus_data.leader_receipt[0].result;
+    const returned = Buffer.from(checked.return_data, "base64");
+    assert.equal(returned[0], 0);
+    checked.study_key = abi.calldata.decode(returned.subarray(1));
+    assert.equal(checked.study_key, `${upstreamRevision}:${step.baseline}`);
+  }
+  if (verify) {
+    for (const [key, value] of Object.entries(checked)) assert.equal(entry[key], value);
+  } else {
+    Object.assign(entry, checked);
+    await save();
+  }
+  console.log("Finalized", step.label, checked.execution, `${checked.agree}/${checked.votes}`);
+}
+
 for (const step of txPlan) {
   let entry = ledger.transactions.find(item => item.label === step.label);
   if (entry?.evm_hash && !entry.hash) {
@@ -160,31 +187,11 @@ for (const step of txPlan) {
     await save();
     console.log("Submitted", step.label, entry.hash);
   }
-  const receipt = await finalized(entry.hash);
-  if (!step.method) {
-    const deployed = receipt.to_address ?? receipt.recipient;
-    if (ledger.contract) assert.equal(ledger.contract, deployed);
-    ledger.contract = deployed;
-    assert.deepEqual(Buffer.from(receipt.data.contract_code, "base64"), contractCode);
-    assert.equal(await read(() => client.getContractCode(deployed)), contractCode.toString("utf8"));
-  }
-  const checked = checkReceipt(receipt, entry, ledger.contract);
-  if (step.method) {
-    checked.baseline = step.baseline;
-    checked.return_data = receipt.consensus_data.leader_receipt[0].result;
-    assert.equal(typeof checked.return_data, "string");
-  }
-  if (verify) {
-    for (const [key, value] of Object.entries(checked)) assert.equal(entry[key], value);
-  } else {
-    Object.assign(entry, checked);
-    await save();
-  }
-  console.log("Finalized", step.label, checked.execution, `${checked.agree}/${checked.votes}`);
+  if (!step.method) await verifyStep(step, entry);
 }
+for (const step of txPlan.slice(1)) await verifyStep(step, ledger.transactions.find(entry => entry.label === step.label));
 
 const view = (functionName, args) => read(() => client.readContract({ address: ledger.contract, functionName, args })).then(canonical);
-assert.notEqual(ledger.transactions[1].return_data, ledger.transactions[2].return_data);
 const readback = [];
 for (const input of [baseline, repairedBaseline]) {
   const study = await view("get_study", [upstreamRevision, input]);

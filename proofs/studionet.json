@@ -1,0 +1,227 @@
+{
+  "network": "studionet",
+  "revision": "5a1e8d88acc7db7fe7c73b281f5d5d4eba34df47",
+  "source_sha256": "4c69bd43555e5e7b507933aed9f5864b2a9e9cce6264a366bb292a221dbcafc3",
+  "upstream": {
+    "revision": "3a716ee1f5ff5456db33cb8a6e964afdca1e7bc3",
+    "fixture_sha256": "fdf2f910ba6dc9c907a46274ea74668813e65d6a5707f03167368bd3a671eb98"
+  },
+  "transactions": [
+    {
+      "label": "deploy",
+      "sender": "0x6e167F37d124550b11FBb74e807f9eF08D120cC1",
+      "test_fee_deposit_wei": "25000000000002588",
+      "evm_hash": "0xe46ebbdb2c53733a680438ad219a7ca25b78342d41b0abf7dbb51b294e03c499",
+      "hash": "0xe46ebbdb2c53733a680438ad219a7ca25b78342d41b0abf7dbb51b294e03c499",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "agree": 3,
+      "votes": 5
+    },
+    {
+      "label": "repair-baseline",
+      "sender": "0xD24A2544c3AfbEC8A61bc8Cf791862bc64dB0ABd",
+      "test_fee_deposit_wei": "125000000000002588",
+      "evm_hash": "0x37d3dbb8bad2c5b90ceedd76fcc2cbb5fad79470d36833e572c530e07bcef035",
+      "hash": "0x37d3dbb8bad2c5b90ceedd76fcc2cbb5fad79470d36833e572c530e07bcef035",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "agree": 3,
+      "votes": 5,
+      "baseline": "012345",
+      "return_data": "APwCM2E3MTZlZTFmNWZmNTQ1NmRiMzNjYjhhNmU5NjRhZmRjYTFlN2JjMzowMTIzNDU=",
+      "study_key": "3a716ee1f5ff5456db33cb8a6e964afdca1e7bc3:012345"
+    },
+    {
+      "label": "confirm-zero-move-baseline",
+      "sender": "0x96b34756C1c2176aA995b2d4ddeb930bA6F8DD2b",
+      "test_fee_deposit_wei": "125000000000002588",
+      "evm_hash": "0xb72d37a99665e76d64a33629072467914f9639744f019ee526849faeac22614e",
+      "hash": "0xb72d37a99665e76d64a33629072467914f9639744f019ee526849faeac22614e",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "agree": 4,
+      "votes": 5,
+      "baseline": "032145",
+      "return_data": "APwCM2E3MTZlZTFmNWZmNTQ1NmRiMzNjYjhhNmU5NjRhZmRjYTFlN2JjMzowMzIxNDU=",
+      "study_key": "3a716ee1f5ff5456db33cb8a6e964afdca1e7bc3:032145"
+    }
+  ],
+  "contract": "0x2bA9e2F9717996d0A9A71D401F04B87f719baeBC",
+  "readback": [
+    {
+      "assignment": {
+        "badge_background": 4,
+        "badge_text": 5,
+        "body_text": 2,
+        "canvas": 0,
+        "link_text": 1,
+        "panel": 3
+      },
+      "baseline": "012345",
+      "baseline_checks": [
+        [
+          "body_text",
+          "canvas",
+          "pass",
+          5774
+        ],
+        [
+          "body_text",
+          "panel",
+          "fail",
+          2534
+        ],
+        [
+          "link_text",
+          "canvas",
+          "fail",
+          1110
+        ],
+        [
+          "link_text",
+          "panel",
+          "pass",
+          13175
+        ],
+        [
+          "badge_text",
+          "badge_background",
+          "pass",
+          5986
+        ]
+      ],
+      "checks": [
+        [
+          "body_text",
+          "canvas",
+          "pass",
+          5774
+        ],
+        [
+          "body_text",
+          "panel",
+          "pass",
+          5199
+        ],
+        [
+          "link_text",
+          "canvas",
+          "pass",
+          14634
+        ],
+        [
+          "link_text",
+          "panel",
+          "pass",
+          13175
+        ],
+        [
+          "badge_text",
+          "badge_background",
+          "pass",
+          5986
+        ]
+      ],
+      "moves": 2,
+      "palette": [
+        "#f8f9fa",
+        "#212529",
+        "#1864ab",
+        "#c5f6fa",
+        "#ffe8cc",
+        "#5f3dc4"
+      ],
+      "revision": "3a716ee1f5ff5456db33cb8a6e964afdca1e7bc3",
+      "source": "https://raw.githubusercontent.com/yeun/open-color/3a716ee1f5ff5456db33cb8a6e964afdca1e7bc3/open-color.json",
+      "status": "assigned"
+    },
+    {
+      "assignment": {
+        "badge_background": 4,
+        "badge_text": 5,
+        "body_text": 2,
+        "canvas": 0,
+        "link_text": 1,
+        "panel": 3
+      },
+      "baseline": "032145",
+      "baseline_checks": [
+        [
+          "body_text",
+          "canvas",
+          "pass",
+          5774
+        ],
+        [
+          "body_text",
+          "panel",
+          "pass",
+          5199
+        ],
+        [
+          "link_text",
+          "canvas",
+          "pass",
+          14634
+        ],
+        [
+          "link_text",
+          "panel",
+          "pass",
+          13175
+        ],
+        [
+          "badge_text",
+          "badge_background",
+          "pass",
+          5986
+        ]
+      ],
+      "checks": [
+        [
+          "body_text",
+          "canvas",
+          "pass",
+          5774
+        ],
+        [
+          "body_text",
+          "panel",
+          "pass",
+          5199
+        ],
+        [
+          "link_text",
+          "canvas",
+          "pass",
+          14634
+        ],
+        [
+          "link_text",
+          "panel",
+          "pass",
+          13175
+        ],
+        [
+          "badge_text",
+          "badge_background",
+          "pass",
+          5986
+        ]
+      ],
+      "moves": 0,
+      "palette": [
+        "#f8f9fa",
+        "#212529",
+        "#1864ab",
+        "#c5f6fa",
+        "#ffe8cc",
+        "#5f3dc4"
+      ],
+      "revision": "3a716ee1f5ff5456db33cb8a6e964afdca1e7bc3",
+      "source": "https://raw.githubusercontent.com/yeun/open-color/3a716ee1f5ff5456db33cb8a6e964afdca1e7bc3/open-color.json",
+      "status": "assigned"
+    }
+  ]
+}

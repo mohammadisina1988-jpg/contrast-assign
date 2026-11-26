@@ -3,7 +3,7 @@
 **A GenLayer contract for finding the smallest text-contrast repair in a shared design palette.**
 
 [![GenVM checks](https://github.com/mohammadisina1988-jpg/contrast-assign/actions/workflows/checks.yml/badge.svg)](https://github.com/mohammadisina1988-jpg/contrast-assign/actions/workflows/checks.yml)
-[Contract source](contracts/contrast_assign.py) · [Tests](tests/direct) · [Open Color fixture](fixtures/open-color.json)
+[Contract source](contracts/contrast_assign.py) · [StudioNet explorer](https://explorer-studio.genlayer.com/address/0x2bA9e2F9717996d0A9A71D401F04B87f719baeBC) · [Proof JSON](proofs/studionet.json) · [Submission](SUBMISSION.md)
 
 Design-system teams can publish a reproducible answer to a concrete question. Given six palette slots already assigned to interface roles, how many roles must change for body text, links, and badge text to clear a 4.5:1 contrast threshold? Other builders can consume the agreed assignment and its pair-by-pair audit from a contract view.
 
@@ -45,6 +45,21 @@ The optimizer checks body text and link text against both canvas and panel, and 
 `revision` is a lowercase 40-character upstream commit SHA. `baseline` is a six-character permutation of `012345` in the role order shown above. The contract stores one canonical study per input pair. In each audit, entries are `[foreground_role, background_role, verdict, contrast_lower_milli]`. Divide the last field by `1000` to read the conservative contrast ratio.
 
 All observers rely on availability and integrity of the same upstream publisher. The pinned revision gives observers a stable target, and independent agreement guards against inconsistent fetched values. Different commit SHAs and baselines can coexist in storage.
+
+## StudioNet proof
+
+| Finalized transaction | Observed result | Agree votes |
+| --- | --- | --- |
+| [Deploy](https://explorer-studio.genlayer.com/tx/0xe46ebbdb2c53733a680438ad219a7ca25b78342d41b0abf7dbb51b294e03c499) | StudioNet contract created | 3 / 5 |
+| [Publish `012345`](https://explorer-studio.genlayer.com/tx/0x37d3dbb8bad2c5b90ceedd76fcc2cbb5fad79470d36833e572c530e07bcef035) | Two moves. All five repaired pairs pass, with a minimum contrast lower bound of 5.199:1. | 3 / 5 |
+| [Publish `032145`](https://explorer-studio.genlayer.com/tx/0xb72d37a99665e76d64a33629072467914f9639744f019ee526849faeac22614e) | Zero moves. All five pairs pass. | 4 / 5 |
+
+Replay the proof against the public RPC with Node.js 22 or newer. The verifier checks deployed source bytes, finalized receipts, decoded return keys, validator votes, and storage readback against an independent reference solver.
+
+```sh
+npm ci
+npm run verify
+```
 
 ## Local checks
 
