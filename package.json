@@ -1,0 +1,14 @@
+{
+  "name": "contrast-assign",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prove": "node scripts/studionet.mjs",
+    "verify": "node scripts/studionet.mjs --verify"
+  },
+  "dependencies": {
+    "genlayer-js": "2.0.0",
+    "viem": "2.58.6"
+  }
+}
